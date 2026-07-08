@@ -58,7 +58,7 @@ public class BookDAO {
     //DELETE BOOK
     public boolean deleteBook(int bookId){
 
-        String sql = "DELETE FROM books WHERE book_id=?";
+        String sql = "UPDATE books SET status='Inactive' WHERE book_id=?";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql)){
@@ -77,7 +77,7 @@ public class BookDAO {
 
         List<Book> books = new ArrayList<>();
 
-        String sql = "SELECT * FROM books";
+        String sql = "SELECT * FROM books WHERE status='Active'";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);
@@ -108,7 +108,7 @@ public class BookDAO {
             new ArrayList<>();
 
     String sql =
-        "SELECT * FROM books WHERE title LIKE ? OR author LIKE ?";
+        "SELECT * FROM books WHERE (title LIKE ? OR author LIKE ?) AND status='Active'";
 
     try(Connection con =
                 DBConnection.getConnection();
@@ -152,7 +152,7 @@ public class BookDAO {
             new ArrayList<>();
 
     String sql =
-            "SELECT * FROM books WHERE quantity > 0";
+            "SELECT * FROM books WHERE quantity > 0 AND status='Active'";
 
     try(Connection con =
                 DBConnection.getConnection();

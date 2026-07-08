@@ -54,45 +54,30 @@ public class MemberDAO {
     }
 
     // DELETE MEMBER
-   public boolean deleteMember(int memberId) {
+    public boolean deleteMember(int memberId) {
 
-    try(Connection con = DBConnection.getConnection()) {
+        String sql = "UPDATE members SET status='Inactive' WHERE member_id=?";
 
-        // Delete issued book records first
-        String deleteIssued =
-                "DELETE FROM issued_books WHERE member_id=?";
+        try(Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)) {
 
-        PreparedStatement ps1 =
-                con.prepareStatement(deleteIssued);
+            ps.setInt(1, memberId);
 
-        ps1.setInt(1, memberId);
-        ps1.executeUpdate();
+            return ps.executeUpdate() > 0;
 
-        // Then delete member
-        String deleteMember =
-                "DELETE FROM members WHERE member_id=?";
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
 
-        PreparedStatement ps2 =
-                con.prepareStatement(deleteMember);
-
-        ps2.setInt(1, memberId);
-
-        return ps2.executeUpdate() > 0;
-
-    } catch(SQLException e) {
-
-        e.printStackTrace();
+        return false;
     }
-
-    return false;
-}
 
     // VIEW MEMBERS
     public List<Member> getAllMembers() {
 
         List<Member> members = new ArrayList<>();
 
-        String sql = "SELECT * FROM members";
+        String sql = "SELECT * FROM members WHERE status='Active'";
 
         try(Connection con = DBConnection.getConnection();
             PreparedStatement ps = con.prepareStatement(sql);

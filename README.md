@@ -1,50 +1,49 @@
-# 📚 Library Management System
+# 📚 Library Management System (REST API Service)
 
-A Java-based desktop application for managing library operations efficiently. This project is built using **Java Swing** for the graphical user interface, **JDBC** for database connectivity, and **MySQL** for data storage. It follows a layered architecture using DAO, Service, Model, and UI components.
+A Java-based REST API backend service for managing library operations efficiently. This project is built using Java's built-in **HttpServer** for routing REST requests, **JDBC** for database connectivity, and **MySQL** for data storage. It follows a clean layered architecture using Controller (API), Service, DAO, and Model layers.
+
+---
 
 ## 🚀 Features
 
 ### 🔐 Admin Authentication
-- Secure admin login system
-- Username and password validation
-- Access control before entering the system
+- Secure admin login validate route (`POST /api/login`)
+- Username and password verification
 
 ### 📖 Book Management
-- Add new books
-- Update book details
-- Delete books
-- Search books
-- View all books
-- Track available quantities
+- Add new books (`POST /api/books`)
+- Update book details (`PUT /api/books`)
+- Delete books (`DELETE /api/books?id=...`)
+- Search books by keyword (`GET /api/books/search?keyword=...`)
+- View all books (`GET /api/books`)
 
 ### 👥 Member Management
-- Add library members
-- Update member information
-- Delete members
-- View all registered members
+- Add library members (`POST /api/members`)
+- Update member details (`PUT /api/members`)
+- Delete members (`DELETE /api/members?id=...`)
+- View all registered members (`GET /api/members`)
 
 ### 🔄 Issue & Return Books
-- Issue books to members
-- Return issued books
-- Track issue date and return date
-- Monitor book status
-
-### 🖥️ User-Friendly Interface
-- Developed using Java Swing
-- Tab-based navigation
-- Interactive tables for displaying records
-- Popup notifications for operations
+- Issue books to members (`POST /api/issues/issue`)
+- Return issued books (`POST /api/issues/return`)
+- Track issue date and return status (`GET /api/issues`)
 
 ---
 
 ## 🏗️ Project Architecture
 
-The project follows a layered architecture:
+The project follows a layered backend architecture:
 
 ```text
 LibraryManagementSystem
 │
+├── LibraryManagementSystem_Postman_Collection.json (Postman API Test Collection)
+│
 ├── src
+│   ├── api
+│   │   ├── ApiHelper.java (Manual JSON helper/serializer)
+│   │   └── ApiServer.java (HttpServer REST controllers & routers)
+│   │
 │   ├── dao
 │   │   ├── AdminDAO.java
 │   │   ├── BookDAO.java
@@ -63,22 +62,17 @@ LibraryManagementSystem
 │   │   ├── MemberService.java
 │   │   └── IssueBookService.java
 │   │
-│   ├── ui
-│   │   ├── LoginFrame.java
-│   │   └── LibraryGUI.java
-│   │
 │   ├── util
 │   │   └── DBConnection.java
 │   │
-│   └── Main.java
+│   └── Main.java (Entry point to bootstrap API server)
 ```
 
 ---
 
 ## 🛠️ Technologies Used
 
-- Java
-- Java Swing
+- Java SE (built-in `com.sun.net.httpserver`)
 - JDBC
 - MySQL
 - Object-Oriented Programming (OOP)
@@ -92,8 +86,7 @@ Before running the project, install:
 
 - Java JDK 8 or higher
 - MySQL Server
-- MySQL JDBC Driver
-- VS Code / IntelliJ IDEA / Eclipse
+- MySQL JDBC Driver (already included in `lib/`)
 
 ---
 
@@ -105,45 +98,31 @@ Before running the project, install:
 CREATE DATABASE librarydb;
 ```
 
-### Suggested Tables
-
-#### Admin
+### Create Tables
 
 ```sql
 CREATE TABLE admin (
     username VARCHAR(50) PRIMARY KEY,
     password VARCHAR(100)
 );
-```
 
-#### Books
-
-```sql
 CREATE TABLE books (
-    book_id INT PRIMARY KEY,
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100),
     author VARCHAR(100),
     category VARCHAR(100),
     quantity INT
 );
-```
 
-#### Members
-
-```sql
 CREATE TABLE members (
-    member_id INT PRIMARY KEY,
+    member_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100),
     email VARCHAR(100),
     phone VARCHAR(20)
 );
-```
 
-#### Issued Books
-
-```sql
 CREATE TABLE issued_books (
-    issue_id INT PRIMARY KEY,
+    issue_id INT AUTO_INCREMENT PRIMARY KEY,
     book_id INT,
     member_id INT,
     issue_date DATE,
@@ -164,75 +143,39 @@ String password = "your_password";
 
 ## ▶️ How to Run
 
-### Clone Repository
-
-```bash
-git clone https://github.com/tusharcodes26/Library-Management-System.git
-```
-
-### Open Project
-
-```bash
-cd Library-Management-System
-```
-
 ### Compile
 
 ```bash
-javac -d bin src/**/*.java
+javac -d bin -cp "lib/*;src" src/**/*.java
 ```
 
-### Run
+### Run API Server
 
 ```bash
-java Main
+java -cp "bin;lib/*" Main
 ```
+The REST API server will start on port `8080`.
 
 ---
 
-## 📸 Application Modules
+## 📬 API Testing
 
-### Login Module
-- Admin authentication
-- Secure access to the system
+An pre-configured Postman Collection is provided in the root directory:
+- [LibraryManagementSystem_Postman_Collection.json](LibraryManagementSystem_Postman_Collection.json)
 
-### Books Module
-- Add, update, delete, search books
-- Display all books
-
-### Members Module
-- Manage member records
-- Update and remove members
-
-### Issue/Return Module
-- Issue books
-- Return books
-- Track issued book history
+Import this file into Postman to test all endpoints.
 
 ---
 
 ## 🎯 Concepts Demonstrated
 
-- Object-Oriented Programming
-- Encapsulation
-- Layered Architecture
-- JDBC Database Connectivity
-- CRUD Operations
-- Swing GUI Development
-- Exception Handling
-- Event Handling
-
----
-
-## 🔮 Future Enhancements
-
-- Role-based authentication
-- Fine calculation system
-- Book reservation feature
-- Due-date reminders
-- Export reports to PDF/Excel
-- Dashboard analytics
-- Barcode/QR code integration
+- REST API Backend Development
+- Lightweight HTTP Server implementation in pure Java
+- Manual JSON parsing and serialization
+- Layered Architecture (separation of concerns)
+- JDBC database connectivity
+- CRUD operations
+- CORS setup for API integration
 
 ---
 
@@ -241,11 +184,3 @@ java Main
 **Tushar Chhabra**
 
 GitHub: https://github.com/tusharcodes26
-
----
-
-## ⭐ Support
-
-If you found this project helpful, please consider starring the repository.
-
-⭐ Star the project on GitHub and feel free to contribute!

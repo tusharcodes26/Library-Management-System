@@ -10,24 +10,15 @@ public class MemberService {
             new MemberDAO();
 
     public boolean addMember(Member member) {
-
-        if(member.getName().trim().isEmpty()) {
-
-            System.out.println("Name Required");
-            return false;
-        }
-
-        if(!member.getEmail().contains("@")) {
-
-            System.out.println("Invalid Email");
-            return false;
-        }
-
+        util.Validator.validateMember(member);
         return memberDAO.addMember(member);
     }
 
     public boolean updateMember(Member member) {
-
+        if(member.getMemberId() <= 0) {
+            throw new util.ValidationException("Invalid Member ID");
+        }
+        util.Validator.validateMember(member);
         return memberDAO.updateMember(member);
     }
 
